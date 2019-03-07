@@ -1,0 +1,210 @@
+% Typeset with XeTeX
+% Allows use of system fonts rather than just LaTeX's ones
+% NOTE - if you use TeXShop and Bibdesk (Mac), can complete citations
+%  - open your .bib file, type~\citep{xx... and then F5 or Option-Escape
+\documentclass[11pt]{article}
+\usepackage[margin=1in, letterpaper]{geometry} % set page layout
+%\geometry{letterpaper}  % or a4paper
+\usepackage[xetex]{graphicx} % allows us to manipulate graphics.
+% Replace option [] with pdftex if you don't use Xe(La)TeX
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{hyphenat}
+\usepackage{epstopdf} % automatic conversion of eps to pdf 
+\usepackage{amsmath, amssymb} % Better maths support & more symbols
+\usepackage{textcomp} % provide lots of new symbols - see textcomp.pdf
+% line spacing: \doublespacing, \onehalfspacing, \singlespacing
+\usepackage{setspace}
+
+\singlespacing
+\usepackage{pgfplotstable}
+% allows text flowing around figs
+% use \begin{wrapfigure}{x}{width} where x = r(ight) or l(eft)
+\usepackage{wrapfig}
+\usepackage[parfill]{parskip} % don't indent new paragraphs
+\usepackage{flafter}  % Don't place figs & tables before their definition 
+\usepackage{verbatim} % allows \begin and \end{comment} regions
+\usepackage{booktabs} % makes tables look good
+\usepackage{bm}  % Define \bm{} to use bold math fonts
+% linenumbers in L margin, start & end with \linenumbers \nolinenumbers,
+\usepackage{lineno} % use option [modulo] for steps of 5
+\usepackage[auth-sc]{authblk} % authors & institutions - see authblk.pdf
+%\renewcommand\Authands{ and } % separates the last 2 authors in the list
+% control how captions look; here, use small font and indent both margins by 20pt
+\usepackage[small]{caption} 
+\setlength{\captionmargin}{20pt}
+
+%: FONT
+% If you don't want to use system fonts, replace from here to 'Citation style' with \usepackage{Palatino} or similar
+%: ************ FANCY FONTS START HERE
+\usepackage[no-math]{fontspec} % 'no-math' = keep computer modern for math fonts
+\usepackage{xunicode} % needed by XeTeX for handling all the system fonts nicely
+\usepackage[no-sscript]{xltxtra} 
+\setmonofont[Scale=0.8]{PT Serif} % typeface for \tt commands
+\setsansfont[BoldFont={PT Serif Bold}, ItalicFont={PT Serif Italic}]{PT Serif} 
+\defaultfontfeatures{Mapping=tex-text}
+\setmainfont{Minion Pro}
+%\setmainfont{Source Sans Pro}
+
+%: ************ FANCY FONTS END HERE
+
+%:CITATION STYLE
+% natbib package: square,curly, angle(brackets)
+% colon (default), comma (to separate multiple citations)
+% authoryear (default),numbers (citations style)
+% super (for superscripted numerical citations, as in Nature)
+% sort (orders multiple cites into order of appearance in ref list, or year if authoryear)
+% sort&compress: as sort, + multiple citations compressed (as 3-6, 15)
+\usepackage[numbers,comma,sort&compress]{natbib}
+
+%:SHORTCUT COMMANDS
+% Maths
+\newcommand{\ddt}[1]{\ensuremath{\frac{{\rm d}#1}{{\rm d}t}}}  % d/dt
+\newcommand{\dd}[2]{\ensuremath{\frac{{\rm d}#1}{{\rm d}#2}}} % dy by dx  - \dd{y}{x}
+\newcommand{\ddsq}[2]{\ensuremath{\frac{{\rm d}^2#1}{{\rm d}#2^2}}} % second deriv
+\newcommand{\pp}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}} % partial \pp{y}{x}
+\newcommand{\ppsq}[2]{\ensuremath{\frac{\partial^2 #1}{\partial {#2}^2}}}
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}} %normal (non-math) font for super/subscripts in text
+\newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
+\newcommand{\positive}{\ensuremath{^+}}
+\newcommand{\negative}{\ensuremath{^-}}
+% Editing
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\redtext}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\bluetext}[1]{{\color{blue}{#1}}}
+\newcommand{\scinot}[2]{\ensuremath{#1 \times 10^{#2}}}
+% Standard stuff
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\khi}{Ki67$^\text{hi}$}
+\newcommand{\klo}{Ki67$^\text{lo}$}
+
+
+% \begin{graybox} text \end{graybox} for text with a background colour
+\definecolor{MyGray}{rgb}{0.96,0.97,0.98}
+\definecolor{MyGray}{rgb}{0.96,0.90,0.98}
+\makeatletter\newenvironment{graybox}{%
+	\begin{lrbox}
+		{\@tempboxa}\begin{minipage}[r]{0.98\columnwidth}}{\end{minipage}\end{lrbox}%
+	\colorbox{MyGray}{\usebox{\@tempboxa}}
+}\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{3 Dimensional PDE to track cell age and Ki67 expression}
+\author{Sanket Rane}
+\date{\today}
+
+\begin{document} 
+	\maketitle
+
+In order to track the dynamics of cells of age `a' expressing the nuclear protein Ki67 with an intensity `k' through time `t', we use the following PDE,
+\begin{equation}
+	\frac{\partial u}{\partial t} +\frac{\partial u}{\partial a} - \beta \, k \, \frac{\partial u}{\partial k}  = - \delta(a) \, u.
+	\label{PDE}
+\end{equation}
+- $\beta$ is constant and gives the rate of loss of Ki67 expression; \\
+- $\delta$ varies with cell age  and gives the rate with which cells are lost from the population, either by death or by differentiation.
+
+Total size of the population at time t is derived by integrating the cell density u(t, a, k) over all allowable cell ages such that $u(t, k) = \int u(t, a, k) da$. \\
+The intensity of Ki67 $\in$ (0, 1) such that it is maximum (k=1) upon entering division which then decays exponentially with rate constant $\beta$.  
+By setting a threshold of Ki67 intensity for Ki67$^{+}$ cells (e.g. k $\ge$ 0.5 $\rightarrow$ Ki67$^{+}$) \khi and \klo subsets can be binned and tracked over time t.
+
+To solve this linear first-order PDE (eq. \ref{PDE}), we need to transform it into an ODE such as,
+\begin{equation}
+	\frac{d}{ds}u(t(s), a(s), k(s)) = F(u, t(s), a(s), k(s)),
+	\label{ODE}
+\end{equation}
+along the (t(s), a(s), k(s)) \textbf{\textit{characteristic curve}}. 
+
+Using the \textbf{\textit{chain rule}} we find, 
+\begin{eqnarray*}
+	\begin{aligned}
+		\frac{d}{ds}u(t(s), a(s), k(s)) &= \frac{\partial u}{\partial t} \frac{dt}{ds} +\frac{\partial u}{\partial a} \frac{da}{ds} + \frac{\partial u}{\partial k} \frac{dk}{ds}. \\
+		\\
+		\text{If we set } \frac{dt}{ds} = 1, \frac{da}{ds} &= 1 \text{ and } \frac{dk}{ds} = - \beta \, k \text{, we get} \\
+		\\
+		\frac{du}{ds} &=\frac{\partial u}{\partial t} +\frac{\partial u}{\partial a} - \beta \, k \, \frac{\partial u}{\partial k}, \\
+	\end{aligned}
+\end{eqnarray*}
+which is the LHS of the PDE that we started with in eq. \ref{PDE}.
+This suggests that along the characteristic curve, the solution of the ODE (eq. \ref{ODE}) is given by,
+\begin{eqnarray}
+	\begin{aligned}
+	&\frac{du}{ds} = - \delta(a) \, u, \\
+	&\text{which can be solved to give,} \\
+	&u(s) = u_0 \, exp(- \int \delta(s) ds).
+	\end{aligned}
+	\label{SOL}
+\end{eqnarray}
+Therefore, if we know $u(t_0, a_0, k_0) (\ie u_0)$ we can find $u(t(s), a(s), k(s)$ using eq. \ref{SOL}, since (t(s), a(s), k(s)) and (t(0), a(0), k(0)) both lie on the same characteristic curve.
+The general solution of PDE in eq. \ref{PDE} thus can be determined by solving the system of characteristic ODEs.
+
+\section*{Tracking cells coming from source}
+We assume that cells of age 0 constantly enter the target population from the source compartment which sets one of the boundary conditions for the PDE in eq. \ref{PDE}.
+\begin{equation*}
+	u_{s}(t, a=0, k) = \phi(t, k)
+\end{equation*}
+where, $\phi$ is the function that gives the source influx.
+The system of characteristic ODEs for this population:
+\begin{eqnarray*}
+	\begin{aligned}
+	&\frac{da}{ds} = 1 \rightarrow a = s + a_0 \quad \text{since,  } a_0 = 0 \rightarrow a=s\\
+	&\frac{dt}{ds} = 1 \rightarrow t = s + t_0 \quad \rightarrow t=a+t_0\\
+	&\frac{dk}{ds} = -\beta \, k \rightarrow k = k_0 \, e^{-\beta \, s} \quad \rightarrow k = k_0 \, e^{-\beta \, a} \\
+	\end{aligned}
+\end{eqnarray*}
+Therefore, $\phi(t_0, k_0) = \phi(t-a, k \, e^{\beta \, a})$.
+
+Following form eq. \ref{SOL},
+\begin{eqnarray}
+	u_{s}(t, a, k) = \phi\bigg(t-a, k \, e^{\beta \, a}\bigg) \, exp\bigg(- \int_0^a \delta(\tau) d\tau\bigg). 
+\end{eqnarray}
+
+\section*{Tracking cells that entered division}
+
+We assume that cells enter division with rate $\rho(a)$ depending on their age and will acquire the maximum Ki67 intensity \ie k=1, forming the second boundary condition for our system.
+\begin{equation*}
+	u_{d}(t, a, k=1) = 2 \, \rho(a) \, u(t, a, k)
+\end{equation*}
+These cells can be tracked using the same system of characteristic ODEs:
+\begin{eqnarray*}
+	\begin{aligned}
+		&\frac{dk}{ds} = -\beta \, k \rightarrow k = k_0 \, e^{-\beta \, s} \quad \text{since,  } k_0 = 1 \rightarrow \frac{log(k)}{-\beta} =  s \\
+		&\frac{da}{ds} = 1 \rightarrow a = s + a_0 \quad \rightarrow a = \frac{log(k)}{-\beta} + a_0\\
+		&\frac{dt}{ds} = 1 \rightarrow t = s + t_0 \quad \rightarrow t = \frac{log(k)}{-\beta} + t_0\\
+	\end{aligned}
+\end{eqnarray*}
+Therefore, $u_{d}(t_0, a_0, k_0) = 2 \, \rho(a) \, u(t + \frac{log(k)}{\beta}, a + \frac{log(k)}{\beta}, k).$
+
+Following form eq. \ref{SOL},
+\begin{eqnarray}
+u_{d}(t, a, k) = 2 \, \rho(a) \, u(t + \frac{log(k)}{\beta}, a + \frac{log(k)}{\beta}, k) \, exp\bigg(- \int_0^a \delta(\tau + \frac{log(k)}{\beta}) d\tau\bigg). 
+\end{eqnarray}
+
+At any given time `t' the density of cells with age `a' and Ki67 intensity `k' is the sum of the source influx and the dividing cells.
+We integrate over allowable ages to get the ki67 distribution of cells. 
+The counts of \khi and \klo cells are then obtained by integrating from threshold k intensity `$\kappa$' (derived form data) to 1 and from 0 to $\kappa$, respectively. 
+\begin{eqnarray}
+	\begin{aligned}
+	u(t, a, k) = u_s(t,a,k) + u_d(t,a,k) \\
+	u(t,k) = \int_0^a u(t,a,k) \\
+	u_{khi}(t) = \int_{\kappa}^1 u(t,k) \\
+	u_{klo}(t) = \int_0^{\kappa} u(t,k) \\
+	\end{aligned}
+\end{eqnarray}
+
+
+
+
+
+
+
+
+
+	
+	
+\end{document}
+	

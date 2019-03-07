@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: Verheijen-Rane et al AJY.aux
+The style file: pnas2009.bst
+Database file #1: rBcell-refs2.bib
+You've used 14 entries,
+            1761 wiz_defined-function locations,
+            568 strings with 6990 characters,
+and the built_in function-call counts, 3951 in all, are:
+= -- 348
+> -- 226
+< -- 0
++ -- 80
+- -- 66
+* -- 384
+:= -- 658
+add.period$ -- 42
+call.type$ -- 14
+change.case$ -- 14
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 140
+empty$ -- 311
+format.name$ -- 66
+if$ -- 793
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 14
+newline$ -- 73
+num.names$ -- 14
+pop$ -- 14
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 16
+stack$ -- 0
+substring$ -- 394
+swap$ -- 42
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 41
+width$ -- 16
+write$ -- 156
